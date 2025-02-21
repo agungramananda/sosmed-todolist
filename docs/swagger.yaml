@@ -1,4 +1,610 @@
+basePath: /api/v1
+definitions:
+  brands.BrandDetails:
+    properties:
+      brand:
+        type: string
+      brand_id:
+        type: integer
+    type: object
+  brands.BrandRequestPayload:
+    properties:
+      brand:
+        maxLength: 200
+        minLength: 1
+        type: string
+    required:
+    - brand
+    type: object
+  brands.ListofBrands:
+    properties:
+      brands:
+        items:
+          $ref: '#/definitions/brands.BrandDetails'
+        type: array
+      meta:
+        $ref: '#/definitions/httpres.ListPagination'
+    type: object
+  httpres.BaseResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  httpres.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  httpres.ListPagination:
+    properties:
+      limit:
+        example: 100
+        type: integer
+      page:
+        example: 1
+        type: integer
+      total_page:
+        example: 10
+        type: integer
+    type: object
+  platforms.ListofPlatforms:
+    properties:
+      meta:
+        $ref: '#/definitions/httpres.ListPagination'
+      platforms:
+        items:
+          $ref: '#/definitions/platforms.PlatformDetails'
+        type: array
+    type: object
+  platforms.PlatformDetails:
+    properties:
+      platform:
+        type: string
+      platform_id:
+        type: integer
+    type: object
+  platforms.PlatformRequestPayload:
+    properties:
+      platform:
+        maxLength: 200
+        minLength: 1
+        type: string
+    required:
+    - platform
+    type: object
+  tasks.ListofTasks:
+    properties:
+      meta:
+        $ref: '#/definitions/httpres.ListPagination'
+      tasks:
+        items:
+          $ref: '#/definitions/tasks.TaskDetails'
+        type: array
+    type: object
+  tasks.TaskDetails:
+    properties:
+      brand:
+        type: string
+      brand_id:
+        type: integer
+      due_date:
+        type: string
+      payment:
+        type: string
+      platform:
+        type: string
+      platform_id:
+        type: integer
+      status:
+        type: string
+      task_id:
+        type: integer
+      title:
+        type: string
+    type: object
+  tasks.TaskRequestPayload:
+    properties:
+      brand_id:
+        minimum: 1
+        type: integer
+      due_date:
+        type: string
+      payment:
+        type: integer
+      platform_id:
+        minimum: 1
+        type: integer
+      status:
+        enum:
+        - Pending
+        - Completed
+        - Scheduled
+        type: string
+      title:
+        type: string
+    required:
+    - due_date
+    - payment
+    - status
+    - title
+    type: object
 info:
   contact: {}
-paths: {}
+  description: Simple API for to-do-list management posts on social media
+  termsOfService: http://swagger.io/terms/
+  title: Sosmed Todolist API
+  version: "1.0"
+paths:
+  /brands:
+    get:
+      parameters:
+      - description: Keyword to search
+        in: query
+        name: keyword
+        type: string
+      - description: Number of entities per page
+        in: query
+        name: limit
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched all brands
+          schema:
+            $ref: '#/definitions/brands.ListofBrands'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get all brands
+      tags:
+      - Brand
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/brands.BrandRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Brand successfully created
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Create a new brand
+      tags:
+      - Brand
+  /brands/{id}:
+    delete:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Brand deleted successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Brand not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Delete a brand by ID
+      tags:
+      - Brand
+    get:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched the brand
+          schema:
+            $ref: '#/definitions/brands.BrandDetails'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Brand not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get a single brand by ID
+      tags:
+      - Brand
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated brand details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/brands.BrandRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Brand updated successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Brand not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Update an existing brand
+      tags:
+      - Brand
+  /platforms:
+    get:
+      parameters:
+      - description: Keyword to search
+        in: query
+        name: keyword
+        type: string
+      - description: Number of entities per page
+        in: query
+        name: limit
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched all platforms
+          schema:
+            $ref: '#/definitions/platforms.ListofPlatforms'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get all platforms
+      tags:
+      - Platform
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Platform details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/platforms.PlatformRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Platform successfully created
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Create a new platform
+      tags:
+      - Platform
+  /platforms/{id}:
+    delete:
+      parameters:
+      - description: Platform ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Platform deleted successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Platform not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Delete a platform by ID
+      tags:
+      - Platform
+    get:
+      parameters:
+      - description: Platform ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched the platform
+          schema:
+            $ref: '#/definitions/platforms.PlatformDetails'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Platform not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get a single platform by ID
+      tags:
+      - Platform
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Platform ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated platform details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/platforms.PlatformRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Platform updated successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Platform not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Update an existing platform
+      tags:
+      - Platform
+  /tasks:
+    get:
+      parameters:
+      - description: Keyword to search
+        in: query
+        name: keyword
+        type: string
+      - description: Number of entities per page
+        in: query
+        name: limit
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched all tasks
+          schema:
+            $ref: '#/definitions/tasks.ListofTasks'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get all tasks
+      tags:
+      - Task
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Task details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.TaskRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task successfully created
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Create a new task
+      tags:
+      - Task
+  /tasks/{id}:
+    delete:
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task deleted successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Delete a task by ID
+      tags:
+      - Task
+    get:
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully fetched the task
+          schema:
+            $ref: '#/definitions/tasks.TaskDetails'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Get a single task by ID
+      tags:
+      - Task
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated task details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.TaskRequestPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task updated successfully
+          schema:
+            $ref: '#/definitions/httpres.BaseResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httpres.ErrorResponse'
+      summary: Update an existing task
+      tags:
+      - Task
 swagger: "2.0"

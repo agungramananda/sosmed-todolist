@@ -8,46 +8,67 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type GetAllTasksHandler func (context.Context, *TaskRequestQuery) (*ListofTasks, error)
-type GetOneTasksHandler func (context.Context, *TaskRequestParams) (*TaskDetails, error)
-type CreateTasksHandler func (context.Context, *TaskRequestPayload) error
-type UpdateTasksHandler func (context.Context, *TaskRequestParams, *TaskRequestPayload) error
-type DeleteTasksHandler func (context.Context, *TaskRequestParams) error
+type GetAllTasksHandler func(context.Context, *TaskRequestQuery) (*ListofTasks, error)
+type GetOneTasksHandler func(context.Context, *TaskRequestParams) (*TaskDetails, error)
+type CreateTasksHandler func(context.Context, *TaskRequestPayload) error
+type UpdateTasksHandler func(context.Context, *TaskRequestParams, *TaskRequestPayload) error
+type DeleteTasksHandler func(context.Context, *TaskRequestParams) error
 
-func HandleGetAllTasks (handler GetAllTasksHandler) echo.HandlerFunc {
-	return func (c echo.Context) (err error) {
+// Get All Tasks godoc
+//
+//	@Summary	Get all tasks
+//	@Tags		Task
+//	@Produce	json
+//	@Param		keyword	query		string	false	"Keyword to search"
+//	@Param		limit	query		int		false	"Number of entities per page"
+//	@Param		page	query		int		false	"Page number"
+//	@Success	200		{object}	ListofTasks	"Successfully fetched all tasks"
+//	@Failure	400		{object}	httpres.ErrorResponse	"Bad request"
+//	@Failure	500		{object}	httpres.ErrorResponse	"Internal server error"
+//	@Router		/tasks [get]
+func HandleGetAllTasks(handler GetAllTasksHandler) echo.HandlerFunc {
+	return func(c echo.Context) (err error) {
 		ctx := c.Request().Context()
 		query := &TaskRequestQuery{}
 
-		
 		if err = c.Bind(query); err != nil {
 			return err
 		}
-		
-		if err = c.Validate(query); err!= nil {
+
+		if err = c.Validate(query); err != nil {
 			return err
 		}
 
-		data, err := handler(ctx,query)
+		data, err := handler(ctx, query)
 		if err != nil {
 			return err
 		}
 
-		return utils.WriteResponse(c, http.StatusOK,  data, "all tasks fetch successfully")
+		return utils.WriteResponse(c, http.StatusOK, data, "All tasks fetched successfully")
 	}
 }
 
-func HandleGetOneTasks (handler GetOneTasksHandler) echo.HandlerFunc {
+// Get One Task godoc
+//
+//	@Summary	Get a single task by ID
+//	@Tags		Task
+//	@Produce	json
+//	@Param		id	path	string	true	"Task ID"
+//	@Success	200		{object}	TaskDetails	"Successfully fetched the task"
+//	@Failure	400		{object}	httpres.ErrorResponse	"Bad request"
+//	@Failure	404		{object}	httpres.ErrorResponse	"Task not found"
+//	@Failure	500		{object}	httpres.ErrorResponse	"Internal server error"
+//	@Router		/tasks/{id} [get]
+func HandleGetOneTasks(handler GetOneTasksHandler) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		params := &TaskRequestParams{}
 
-		
 		if err := c.Bind(params); err != nil {
 			return err
 		}
-		
-		if err := c.Validate(params); err!= nil {
+
+		if err := c.Validate(params); err != nil {
 			return err
 		}
 
@@ -56,21 +77,31 @@ func HandleGetOneTasks (handler GetOneTasksHandler) echo.HandlerFunc {
 			return err
 		}
 
-		return utils.WriteResponse(c, 200, data, "task fetch successfully")
+		return utils.WriteResponse(c, http.StatusOK, data, "Task fetched successfully")
 	}
 }
 
-func HandleCreateTasks (handler CreateTasksHandler) echo.HandlerFunc {
+// Create Task godoc
+//
+//	@Summary	Create a new task
+//	@Tags		Task
+//	@Accept		json
+//	@Produce	json
+//	@Param		body	body	TaskRequestPayload	true	"Task details"
+//	@Success	201		{object}	httpres.BaseResponse	"Task successfully created"
+//	@Failure	400		{object}	httpres.ErrorResponse	"Bad request"
+//	@Failure	500		{object}	httpres.ErrorResponse	"Internal server error"
+//	@Router		/tasks [post]
+func HandleCreateTasks(handler CreateTasksHandler) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		payload := &TaskRequestPayload{}
 
-		
 		if err := c.Bind(payload); err != nil {
 			return err
 		}
-		
-		if err := c.Validate(payload); err!= nil {
+
+		if err := c.Validate(payload); err != nil {
 			return err
 		}
 
@@ -79,11 +110,24 @@ func HandleCreateTasks (handler CreateTasksHandler) echo.HandlerFunc {
 			return err
 		}
 
-		return utils.WriteResponse(c, http.StatusCreated, nil, "new task successfully added")
+		return utils.WriteResponse(c, http.StatusCreated, nil, "New task successfully added")
 	}
 }
 
-func HandleUpdateTasks (handler UpdateTasksHandler) echo.HandlerFunc{
+// Update Task godoc
+//
+//	@Summary	Update an existing task
+//	@Tags		Task
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path	string				true	"Task ID"
+//	@Param		body	body	TaskRequestPayload	true	"Updated task details"
+//	@Success	200		{object}	httpres.BaseResponse	"Task updated successfully"
+//	@Failure	400		{object}	httpres.ErrorResponse	"Bad request"
+//	@Failure	404		{object}	httpres.ErrorResponse	"Task not found"
+//	@Failure	500		{object}	httpres.ErrorResponse	"Internal server error"
+//	@Router		/tasks/{id} [put]
+func HandleUpdateTasks(handler UpdateTasksHandler) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		params := &TaskRequestParams{}
@@ -97,7 +141,7 @@ func HandleUpdateTasks (handler UpdateTasksHandler) echo.HandlerFunc{
 			return err
 		}
 
-		if err := (&echo.DefaultBinder{}).BindBody(c, payload);err != nil {
+		if err := (&echo.DefaultBinder{}).BindBody(c, payload); err != nil {
 			return err
 		}
 
@@ -109,11 +153,22 @@ func HandleUpdateTasks (handler UpdateTasksHandler) echo.HandlerFunc{
 			return err
 		}
 
-		return utils.WriteResponse(c, 200, nil, "task updated successfully")
+		return utils.WriteResponse(c, http.StatusOK, nil, "Task updated successfully")
 	}
 }
 
-func HandleDeleteTasks (handler DeleteTasksHandler) echo.HandlerFunc {
+// Delete Task godoc
+//
+//	@Summary	Delete a task by ID
+//	@Tags		Task
+//	@Produce	json
+//	@Param		id	path	string	true	"Task ID"
+//	@Success	200		{object}	httpres.BaseResponse	"Task deleted successfully"
+//	@Failure	400		{object}	httpres.ErrorResponse	"Bad request"
+//	@Failure	404		{object}	httpres.ErrorResponse	"Task not found"
+//	@Failure	500		{object}	httpres.ErrorResponse	"Internal server error"
+//	@Router		/tasks/{id} [delete]
+func HandleDeleteTasks(handler DeleteTasksHandler) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 		params := &TaskRequestParams{}
@@ -130,6 +185,6 @@ func HandleDeleteTasks (handler DeleteTasksHandler) echo.HandlerFunc {
 			return err
 		}
 
-		return utils.WriteResponse(c, 200, nil, "task deleted successfully")
+		return utils.WriteResponse(c, http.StatusOK, nil, "Task deleted successfully")
 	}
 }

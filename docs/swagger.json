@@ -1,7 +1,927 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Simple API for to-do-list management posts on social media",
+        "title": "Sosmed Todolist API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "version": "1.0"
     },
-    "paths": {}
+    "basePath": "/api/v1",
+    "paths": {
+        "/brands": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Get all brands",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Keyword to search",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entities per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched all brands",
+                        "schema": {
+                            "$ref": "#/definitions/brands.ListofBrands"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Create a new brand",
+                "parameters": [
+                    {
+                        "description": "Brand details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/brands.BrandRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Brand successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/brands/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Get a single brand by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched the brand",
+                        "schema": {
+                            "$ref": "#/definitions/brands.BrandDetails"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Update an existing brand",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated brand details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/brands.BrandRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Brand updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "Delete a brand by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Brand ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Brand deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/platforms": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Platform"
+                ],
+                "summary": "Get all platforms",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Keyword to search",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entities per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched all platforms",
+                        "schema": {
+                            "$ref": "#/definitions/platforms.ListofPlatforms"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Platform"
+                ],
+                "summary": "Create a new platform",
+                "parameters": [
+                    {
+                        "description": "Platform details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/platforms.PlatformRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Platform successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/platforms/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Platform"
+                ],
+                "summary": "Get a single platform by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Platform ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched the platform",
+                        "schema": {
+                            "$ref": "#/definitions/platforms.PlatformDetails"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Platform not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Platform"
+                ],
+                "summary": "Update an existing platform",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Platform ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated platform details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/platforms.PlatformRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Platform updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Platform not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Platform"
+                ],
+                "summary": "Delete a platform by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Platform ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Platform deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Platform not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all tasks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Keyword to search",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of entities per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched all tasks",
+                        "schema": {
+                            "$ref": "#/definitions/tasks.ListofTasks"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create a new task",
+                "parameters": [
+                    {
+                        "description": "Task details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/tasks.TaskRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Task successfully created",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get a single task by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully fetched the task",
+                        "schema": {
+                            "$ref": "#/definitions/tasks.TaskDetails"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Update an existing task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated task details",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/tasks.TaskRequestPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Delete a task by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.BaseResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httpres.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "brands.BrandDetails": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "brands.BrandRequestPayload": {
+            "type": "object",
+            "required": [
+                "brand"
+            ],
+            "properties": {
+                "brand": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1
+                }
+            }
+        },
+        "brands.ListofBrands": {
+            "type": "object",
+            "properties": {
+                "brands": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/brands.BrandDetails"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/httpres.ListPagination"
+                }
+            }
+        },
+        "httpres.BaseResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "httpres.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "httpres.ListPagination": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "total_page": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "platforms.ListofPlatforms": {
+            "type": "object",
+            "properties": {
+                "meta": {
+                    "$ref": "#/definitions/httpres.ListPagination"
+                },
+                "platforms": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/platforms.PlatformDetails"
+                    }
+                }
+            }
+        },
+        "platforms.PlatformDetails": {
+            "type": "object",
+            "properties": {
+                "platform": {
+                    "type": "string"
+                },
+                "platform_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "platforms.PlatformRequestPayload": {
+            "type": "object",
+            "required": [
+                "platform"
+            ],
+            "properties": {
+                "platform": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "minLength": 1
+                }
+            }
+        },
+        "tasks.ListofTasks": {
+            "type": "object",
+            "properties": {
+                "meta": {
+                    "$ref": "#/definitions/httpres.ListPagination"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tasks.TaskDetails"
+                    }
+                }
+            }
+        },
+        "tasks.TaskDetails": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "brand_id": {
+                    "type": "integer"
+                },
+                "due_date": {
+                    "type": "string"
+                },
+                "payment": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "string"
+                },
+                "platform_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "task_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "tasks.TaskRequestPayload": {
+            "type": "object",
+            "required": [
+                "due_date",
+                "payment",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "brand_id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "due_date": {
+                    "type": "string"
+                },
+                "payment": {
+                    "type": "integer"
+                },
+                "platform_id": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "Pending",
+                        "Completed",
+                        "Scheduled"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }

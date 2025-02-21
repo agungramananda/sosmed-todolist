@@ -18,9 +18,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @title Sosmed Todolist API
+// @version 1.0
+// @description Simple API for to-do-list management posts on social media
+// @termsOfService http://swagger.io/terms/
+
+// @BasePath /api/v1
+
 func main() {
 	config := config.New()
-	
+
 	docs.SwaggerInfo.Host = config.SwaggerHost
 	logger := logger.New()
 	validator := custom_validator.NewCustomValidator(validator.New(validator.WithRequiredStructEnabled()))
