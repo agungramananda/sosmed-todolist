@@ -1,5 +1,5 @@
 run :
-	@docker compose build && docker compose up
+	@docker compose build > /dev/null && docker compose up
 
 test:
 	@go test -v ../...
