@@ -1,5 +1,5 @@
 run :
-	@go run ./cmd/server/main.go
+	@docker compose build && docker compose up
 
 test:
 	@go test -v ../...
