@@ -1,0 +1,35 @@
+services:
+  backend:
+    container_name: sosmed-todolist-be
+    image: sosmed-todolist-be:v1.0.0
+    build: .
+    restart: always
+    ports:
+      - "${SVC_PORT}:${SERVER_PORT}"
+    environment:
+      - SVC_NAME=${SVC_NAME}
+      - SVC_HOST=${SVC_HOST}
+      - SVC_PORT=${SVC_PORT}
+      - SWAGGER_HOST=${SWAGGER_HOST}
+      - SWAGGER_PORT=${SWAGGER_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - postgres
+    volumes:
+      - ./internal/database/postgres/migrations:/app/internal/database/postgres/migrations
+  postgres:
+    container_name: sosmed-todolist-db
+    image: postgres
+    volumes:
+      - ./app/db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    shm_size: 128mb
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"

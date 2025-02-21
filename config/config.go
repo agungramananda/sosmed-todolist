@@ -1,10 +1,7 @@
 package config
 
 import (
-	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 var conf Config
@@ -19,10 +16,6 @@ type Config struct {
 }
 
 func New() *Config {
-	if err := godotenv.Load("config/.env"); err != nil {
-		log.Println(".env file not found")
-	}
-
 	conf = Config{
 		ServiceName:		os.Getenv("SVC_NAME"),
 		ServiceHost: 		os.Getenv("SVC_HOST"),
